@@ -112,6 +112,7 @@
     margin-top:6px;
   }
   .whatsapp-btn:hover{background:#20bd5a; transform:translateY(-1px);}
+  .whatsapp-btn:disabled{opacity:0.7; cursor:wait;}
   .whatsapp-btn svg{width:22px; height:22px; flex-shrink:0;}
 
   .trust-strip{
@@ -184,9 +185,9 @@
           <label for="message">Additional Details</label>
           <textarea id="message" placeholder="Preferred lanes, availability, anything else"></textarea>
         </div>
-        <button type="submit" class="whatsapp-btn">
+        <button type="submit" class="whatsapp-btn" id="submitBtn">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.121.553 4.115 1.523 5.845L0 24l6.335-1.494A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.94 9.94 0 01-5.086-1.391l-.365-.217-3.775.89.897-3.686-.238-.378A9.953 9.953 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
-          Send on WhatsApp
+          <span id="btnText">Send on WhatsApp</span>
         </button>
       </form>
     </div>
@@ -209,10 +210,17 @@
 </footer>
 
 <script>
-  // ⚠️ Set your WhatsApp business number here (with country code, no + or spaces)
+  // ⚠️ Your WhatsApp business number (country code, no + or spaces)
   const WHATSAPP_NUMBER = "923374232816";
 
-  document.getElementById('contactForm').addEventListener('submit', function(e){
+  // Make.com webhook — every lead is sent here too (Google Sheets + Email)
+  const WEBHOOK_URL = "https://hook.eu1.make.com/dwf4cxojdt2dnt8pgi3tg0u6ao3emi3o";
+
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+
+  form.addEventListener('submit', function(e){
     e.preventDefault();
 
     const name = document.getElementById('name').value.trim();
@@ -220,19 +228,45 @@
     const vehicle = document.getElementById('vehicle').value;
     const base = document.getElementById('base').value.trim();
     const message = document.getElementById('message').value.trim();
+    const timestamp = new Date().toISOString();
 
-    let text = `Hello, I'd like a load for my truck.%0A%0A`;
-    text += `*Name:* ${name}%0A`;
-    text += `*Phone:* ${phone}%0A`;
-    text += `*Equipment:* ${vehicle}%0A`;
-    text += `*Home base:* ${base}%0A`;
-    if(message){ text += `*Details:* ${message}%0A`; }
+    submitBtn.disabled = true;
+    btnText.textContent = "Sending...";
 
-    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
-    window.open(waUrl, '_blank');
+    // Send lead data to Make.com webhook (Google Sheets + Email log)
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name,
+        phone: phone,
+        equipment_type: vehicle,
+        home_base: base,
+        message: message,
+        timestamp: timestamp
+      })
+    })
+    .catch(function(err){
+      console.error('Webhook error:', err);
+    })
+    .finally(function(){
+      // Build WhatsApp message
+      let text = `Hello, I'd like a load for my truck.%0A%0A`;
+      text += `*Name:* ${name}%0A`;
+      text += `*Phone:* ${phone}%0A`;
+      text += `*Equipment:* ${vehicle}%0A`;
+      text += `*Home base:* ${base}%0A`;
+      if(message){ text += `*Details:* ${message}%0A`; }
+
+      const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+      window.open(waUrl, '_blank');
+
+      submitBtn.disabled = false;
+      btnText.textContent = "Send on WhatsApp";
+      form.reset();
+    });
   });
 </script>
 
 </body>
 </html>
-
