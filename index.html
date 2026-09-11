@@ -1,1 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crown Dispatch Services — Get Your Truck Loaded</title>
+<style>
+  :root{
+    --night: #0a0e1a;
+    --night-2: #10162a;
+    --steel: #7c8aa8;
+    --steel-light: #c3ccdd;
+    --paper: #f5f3ec;
+    --spark: #e8b23d;
+    --spark-dim: #6b5626;
+    --line: rgba(255,255,255,0.09);
+    --whatsapp: #25D366;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--night);
+    color:var(--steel-light);
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{
+    font-family:'Arial Narrow', 'Helvetica Neue', sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    color:var(--paper);
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+
+  .stars{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 50% 15%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 95% 25%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 15% 90%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 60% 60%, rgba(255,255,255,0.35), transparent);
+    background-size:100% 100%;
+  }
+
+  header{
+    position:sticky; top:0; z-index:10;
+    background:rgba(10,14,26,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px; max-width:1120px; margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand svg{width:26px; height:26px;}
+  .brand span{
+    font-family:'Arial Narrow', sans-serif; font-weight:800;
+    font-size:18px; color:var(--paper); letter-spacing:0.02em;
+  }
+
+  .hero{padding:70px 0 50px;}
+  .hero .wrap{display:grid; gap:22px; text-align:center;}
+  .kicker{color:var(--spark); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:10px;}
+  .kicker .dash{width:24px; height:1px; background:var(--spark-dim);}
+  .hero h1{font-size:clamp(32px, 5.5vw, 54px); line-height:1.08; max-width:760px; margin:0 auto;}
+  .hero p.lead{font-size:17px; color:var(--steel); max-width:540px; margin:0 auto;}
+
+  .highway{
+    height:40px; position:relative; overflow:hidden;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, var(--night-2), var(--night));
+  }
+  .highway::before{
+    content:''; position:absolute; top:50%; left:0; right:0; height:3px;
+    transform:translateY(-50%);
+    background:repeating-linear-gradient(90deg, var(--spark-dim) 0 36px, transparent 36px 64px);
+    opacity:0.55;
+  }
+
+  .form-section{padding:60px 0 90px;}
+  .form-card{
+    max-width:620px; margin:0 auto;
+    border:1px solid var(--line); background:var(--night-2);
+    padding:40px 32px; border-radius:4px;
+  }
+  .form-card h2{font-size:24px; margin-bottom:6px; text-align:center;}
+  .form-card p.sub{color:var(--steel); font-size:14px; text-align:center; margin-bottom:28px;}
+
+  form{display:grid; gap:16px;}
+  .row2{display:grid; gap:16px;}
+  @media(min-width:480px){.row2{grid-template-columns:1fr 1fr;}}
+  label{font-size:13px; color:var(--steel); display:block; margin-bottom:6px;}
+  input, select, textarea{
+    width:100%; background:var(--night); border:1px solid var(--line);
+    color:var(--paper); padding:13px 14px; border-radius:3px; font-size:15px; font-family:inherit;
+  }
+  input:focus, select:focus, textarea:focus{outline:1px solid var(--spark); border-color:var(--spark);}
+  textarea{resize:vertical; min-height:90px;}
+
+  .whatsapp-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:var(--whatsapp); color:#fff; border:none;
+    padding:16px 24px; border-radius:3px; font-size:16px; font-weight:700;
+    cursor:pointer; transition:background 0.15s, transform 0.15s;
+    margin-top:6px;
+  }
+  .whatsapp-btn:hover{background:#20bd5a; transform:translateY(-1px);}
+  .whatsapp-btn svg{width:22px; height:22px; flex-shrink:0;}
+
+  .trust-strip{
+    padding:30px 0; border-top:1px solid var(--line);
+  }
+  .trust-strip .wrap{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:16px; text-align:center;
+  }
+  @media(min-width:640px){.trust-strip .wrap{grid-template-columns:repeat(4,1fr);}}
+  .trust-strip b{display:block; font-size:22px; color:var(--paper); font-family:'Arial Narrow',sans-serif; font-weight:800;}
+  .trust-strip span{font-size:12px; color:var(--steel);}
+
+  footer{border-top:1px solid var(--line); padding:26px 0;}
+  footer .wrap{text-align:center; font-size:12px; color:var(--steel);}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<header>
+  <nav>
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 L14.5 9 L22 9.5 L16 14 L18 21.5 L12 17 L6 21.5 L8 14 L2 9.5 L9.5 9 Z" fill="#e8b23d"/></svg>
+      <span>CROWN DISPATCH SERVICES</span>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker"><span class="dash"></span> FREIGHT DISPATCH SERVICE <span class="dash"></span></div>
+    <h1>Get your truck loaded — fill the form, message us on WhatsApp instantly.</h1>
+    <p class="lead">Fill in your details below. When you hit "Send on WhatsApp", it opens WhatsApp with your info already written — one tap and it's in front of a dispatcher.</p>
+  </div>
+</section>
+
+<div class="highway"></div>
+
+<section class="form-section">
+  <div class="wrap">
+    <div class="form-card">
+      <h2>Get your truck loaded</h2>
+      <p class="sub">Takes less than a minute</p>
+      <form id="contactForm">
+        <div class="row2">
+          <div>
+            <label for="name">Full Name</label>
+            <input type="text" id="name" required placeholder="Your name">
+          </div>
+          <div>
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" required placeholder="Your number">
+          </div>
+        </div>
+        <div>
+          <label for="vehicle">Equipment Type</label>
+          <select id="vehicle">
+            <option>Dry van</option>
+            <option>Reefer</option>
+            <option>Flatbed</option>
+            <option>Power only</option>
+            <option>Box truck</option>
+          </select>
+        </div>
+        <div>
+          <label for="base">Home Base (city/state)</label>
+          <input type="text" id="base" required placeholder="e.g. Chicago, IL">
+        </div>
+        <div>
+          <label for="message">Additional Details</label>
+          <textarea id="message" placeholder="Preferred lanes, availability, anything else"></textarea>
+        </div>
+        <button type="submit" class="whatsapp-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.121.553 4.115 1.523 5.845L0 24l6.335-1.494A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.94 9.94 0 01-5.086-1.391l-.365-.217-3.775.89.897-3.686-.238-.378A9.953 9.953 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+          Send on WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="wrap">
+    <div><b>5–10%</b><span>Commission only</span></div>
+    <div><b>24/7</b><span>Load search</span></div>
+    <div><b>Nationwide</b><span>Coverage</span></div>
+    <div><b>Same-day</b><span>Response</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Crown Dispatch Services. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+  // ⚠️ Set your WhatsApp business number here (with country code, no + or spaces)
+  const WHATSAPP_NUMBER = "923374232816";
+
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const vehicle = document.getElementById('vehicle').value;
+    const base = document.getElementById('base').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    let text = `Hello, I'd like a load for my truck.%0A%0A`;
+    text += `*Name:* ${name}%0A`;
+    text += `*Phone:* ${phone}%0A`;
+    text += `*Equipment:* ${vehicle}%0A`;
+    text += `*Home base:* ${base}%0A`;
+    if(message){ text += `*Details:* ${message}%0A`; }
+
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+    window.open(waUrl, '_blank');
+  });
+</script>
+
+</body>
+</html>
 
