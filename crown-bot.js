@@ -5,18 +5,18 @@
  *
  *   <script>
  *     window.CROWN_CHAT_CONFIG = {
- *       apiEndpoint: "https://your-worker-name.your-subdomain.workers.dev/chat"
+ *       apiEndpoint: "https://darkstar.app.n8n.cloud/webhook/crown-chat"
  *     };
  *   </script>
- *   <script src="crown-chat-widget.js"></script>
+ *   <script src="crown-bot.js"></script>
  */
 (function () {
   "use strict";
 
   var config = window.CROWN_CHAT_CONFIG || {};
-  // Default endpoint is already set to your deployed Worker — no extra config needed.
+  // Default endpoint now points at the Dark Star Dispatch n8n agent's webhook.
   // (window.CROWN_CHAT_CONFIG can still override this if you ever redeploy elsewhere.)
-  var API_ENDPOINT = config.apiEndpoint || "https://crown-dispatch-chat.shakikhan22050.workers.dev/chat";
+  var API_ENDPOINT = config.apiEndpoint || "https://darkstar.app.n8n.cloud/webhook/crown-chat";
 
   // ---------- Font ----------
   if (!document.getElementById("cds-font-link")) {
