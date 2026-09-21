@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dark Star Dispatch | Truck dispatch for small carriers</title>
+<meta name="description" content="Dark Star Dispatch finds loads for small US carriers with 1 to 3 trucks, negotiates with brokers and follows up on the paperwork. You approve every load. No upfront fees.">
+<meta name="theme-color" content="#0F2137">
+<meta property="og:title" content="Dark Star Dispatch">
+<meta property="og:description" content="You drive. We handle the broker calls. Dispatch for small US carriers with 1 to 3 trucks.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230F2137'/%3E%3Cpath d='M32 8l4.5 19.5L56 32l-19.5 4.5L32 56l-4.5-19.5L8 32l19.5-4.5z' fill='%23F5B301'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0F2137;
+    --deep: #183253;
+    --ground: #0B1A2E;
+    --road: #F4F6F8;
+    --white: #FFFFFF;
+    --amber: #F5B301;
+    --amber-dark: #B58200;
+    --ink: #14202E;
+    --muted: #526174;
+    --on-night: #E8EEF5;
+    --on-night-muted: #A9B8CA;
+    --line: #D5DDE6;
+    --focus: #0F4C9A;
+    --display: "Barlow Condensed", "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+    --body: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body { margin: 0; font-family: var(--body); font-size: 1.0625rem; line-height: 1.6; color: var(--ink); background: var(--road); -webkit-text-size-adjust: 100%; }
+  svg { max-width: 100%; }
+  a { color: inherit; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.02; margin: 0; letter-spacing: -0.005em; }
+  p { margin: 0; }
+  ul, ol { margin: 0; padding: 0; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .on-dark { --focus: var(--amber); }
+  .wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+  .skip { position: absolute; left: 1rem; top: -4rem; background: var(--amber); color: var(--night); padding: .7rem 1rem; font-weight: 700; z-index: 50; }
+  .skip:focus { top: 1rem; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 1.5rem; border-radius: 4px; font-family: var(--body); font-weight: 700; font-size: 1rem; text-decoration: none; border: 2px solid transparent; cursor: pointer; transition: background-color .15s ease, border-color .15s ease; text-align: center; }
+  .btn-primary { background: var(--amber); color: var(--night); }
+  .btn-primary:hover { background: #FFC529; }
+  .btn-ghost { border-color: rgba(232, 238, 245, .4); color: var(--on-night); }
+  .btn-ghost:hover { border-color: var(--on-night); }
+  .btn-small { min-height: 42px; padding: 0 1.1rem; font-size: .95rem; }
+
+  /* Header */
+  .site-header { position: sticky; top: 0; z-index: 20; background: var(--night); color: var(--on-night); border-bottom: 1px solid rgba(255, 255, 255, .08); }
+  .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 68px; }
+  .brand { display: inline-flex; align-items: center; gap: .65rem; text-decoration: none; font-family: var(--display); font-size: 1.55rem; font-weight: 700; letter-spacing: .01em; }
+  .brand svg { width: 28px; height: 28px; flex: none; }
+  .nav { display: none; gap: 1.75rem; }
+  .nav a { text-decoration: none; color: var(--on-night-muted); font-weight: 500; font-size: .98rem; }
+  .nav a:hover { color: var(--white); }
+  @media (min-width: 820px) { .nav { display: flex; } }
+
+  /* Hero */
+  .hero { background: var(--night); color: var(--on-night); overflow: hidden; }
+  .hero .wrap { display: grid; gap: 2rem; align-items: center; padding-block: 3.5rem 0; }
+  .hero h1 { font-size: clamp(3rem, 9vw, 5.6rem); color: var(--white); max-width: 11ch; }
+  .hero-lead { margin-top: 1.4rem; max-width: 34rem; font-size: 1.15rem; color: var(--on-night-muted); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
+  .hero-note { margin-top: 1.1rem; font-size: .95rem; color: var(--on-night-muted); }
+  .hero-art { align-self: end; justify-self: center; width: min(100%, 460px); }
+  .hero-art svg { display: block; width: 100%; height: auto; }
+  .hero-star { transform-box: fill-box; transform-origin: center; animation: star-rise 1.4s ease-out both; }
+  @keyframes star-rise { from { opacity: 0; transform: scale(.55); } to { opacity: 1; transform: scale(1); } }
+  @media (min-width: 900px) {
+    .hero .wrap { grid-template-columns: 1.15fr .85fr; padding-block: 5rem 0; gap: 3rem; }
+    .hero-art { justify-self: end; width: 100%; }
+  }
+
+  /* Facts */
+  .facts { background: var(--deep); color: var(--on-night); }
+  .facts ul { list-style: none; display: grid; }
+  .facts li { padding: 1.4rem 0; border-top: 1px solid rgba(255, 255, 255, .12); }
+  .facts li:first-child { border-top: 0; }
+  .facts strong { display: block; font-family: var(--display); font-size: 1.45rem; font-weight: 600; color: var(--white); line-height: 1.15; }
+  .facts span { display: block; margin-top: .25rem; font-size: .95rem; color: var(--on-night-muted); }
+  @media (min-width: 820px) {
+    .facts ul { grid-template-columns: repeat(3, 1fr); }
+    .facts li { border-top: 0; border-left: 1px solid rgba(255, 255, 255, .12); padding: 1.8rem 1.6rem; }
+    .facts li:first-child { border-left: 0; padding-left: 0; }
+  }
+
+  /* Sections */
+  .section { padding-block: clamp(3.5rem, 8vw, 6rem); }
+  .section h2 { font-size: clamp(2.3rem, 5vw, 3.4rem); }
+  .lead { margin-top: 1rem; max-width: 34rem; color: var(--muted); }
+  .section-dark { background: var(--night); color: var(--on-night); }
+  .section-dark h2, .section-dark h3 { color: var(--white); }
+  .section-dark .lead { color: var(--on-night-muted); }
+  .section-white { background: var(--white); }
+  .split { display: grid; gap: 2.5rem; }
+  @media (min-width: 900px) { .split { grid-template-columns: .8fr 1.2fr; gap: 4rem; } }
+
+  /* Route (the process) */
+  .route { list-style: none; position: relative; max-width: 700px; }
+  .route::before { content: ""; position: absolute; left: 19px; top: 10px; bottom: 10px; border-left: 3px dashed var(--amber-dark); }
+  .route li { position: relative; padding: 0 0 2.2rem 4rem; }
+  .route li:last-child { padding-bottom: 0; }
+  .stop { position: absolute; left: 0; top: -2px; width: 40px; height: 40px; border-radius: 50%; background: var(--night); color: var(--amber); border: 3px solid var(--amber); font-family: var(--display); font-weight: 700; font-size: 1.3rem; display: grid; place-items: center; }
+  .route h3 { font-size: 1.7rem; }
+  .route p { margin-top: .4rem; color: var(--muted); max-width: 32rem; }
+
+  /* Who does what */
+  .duo { display: grid; gap: 1.5rem; margin-top: 2.5rem; }
+  @media (min-width: 820px) { .duo { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+  .panel { padding: 2rem 1.75rem; border-radius: 4px; background: var(--road); border-top: 5px solid var(--amber); }
+  .panel-alt { background: transparent; border: 2px solid var(--line); border-top: 5px solid var(--night); }
+  .panel h3 { font-size: 1.9rem; }
+  .panel > p { margin-top: .4rem; color: var(--muted); font-size: .98rem; }
+  .marks { list-style: none; margin-top: 1.4rem; display: grid; gap: .9rem; }
+  .marks li { position: relative; padding-left: 1.7rem; }
+  .marks li::before { content: ""; position: absolute; left: .1rem; top: .5rem; width: .7rem; height: .7rem; transform: rotate(45deg); background: var(--amber); }
+  .marks-hollow li::before { background: transparent; border: 2px solid var(--night); }
+
+  /* Needs + pricing */
+  .needs-grid { display: grid; gap: 3rem; }
+  @media (min-width: 900px) { .needs-grid { grid-template-columns: 1fr 1fr; gap: 4.5rem; } }
+  .section-dark .marks li::before { background: var(--amber); }
+  .price-box { border: 2px solid var(--amber); border-radius: 4px; padding: 2rem 1.75rem; }
+  .price-box h3 { font-size: 1.9rem; }
+  .price { margin-top: .9rem; font-family: var(--display); font-weight: 700; font-size: clamp(1.9rem, 4.5vw, 2.6rem); line-height: 1.05; color: var(--amber); }
+  .price-box .marks { margin-top: 1.4rem; }
+  .price-box .marks li::before { background: var(--amber); }
+
+  /* FAQ */
+  .faq { margin-top: 2.2rem; max-width: 760px; border-top: 1px solid var(--line); }
+  .faq details { border-bottom: 1px solid var(--line); }
+  .faq summary { list-style: none; cursor: pointer; padding: 1.2rem 2.5rem 1.2rem 0; font-weight: 600; font-size: 1.08rem; position: relative; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; position: absolute; right: .3rem; top: 50%; transform: translateY(-50%); font-size: 1.6rem; font-weight: 500; color: var(--amber-dark); transition: transform .2s ease; }
+  .faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .faq details p { padding: 0 2.5rem 1.4rem 0; color: var(--muted); max-width: 40rem; }
+
+  /* Apply */
+  .apply { background: var(--deep); color: var(--on-night); }
+  .apply h2 { color: var(--white); font-size: clamp(2.4rem, 6vw, 4rem); max-width: 14ch; }
+  .apply .lead { color: var(--on-night-muted); }
+  .apply-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
+  .apply-next { margin-top: 2.5rem; display: grid; gap: 1.2rem; max-width: 40rem; }
+  .apply-next p { padding-left: 1.2rem; border-left: 3px solid var(--amber); color: var(--on-night); }
+  .apply-next strong { color: var(--white); }
+  .contact-line { margin-top: 2rem; color: var(--on-night-muted); font-size: .98rem; }
+  .contact-line a { color: var(--white); }
+
+  /* Footer */
+  .site-footer { background: var(--ground); color: var(--on-night-muted); padding-block: 2.5rem; font-size: .92rem; }
+  .site-footer .wrap { display: grid; gap: 1.2rem; }
+  .site-footer .brand { color: var(--white); }
+  .site-footer a { color: var(--on-night); }
+  .legal { max-width: 46rem; line-height: 1.6; }
+  .foot-contact { display: flex; flex-wrap: wrap; gap: .4rem 1.5rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header on-dark">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Dark Star Dispatch, home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6l4.8 21.2L58 32l-21.2 4.8L32 58l-4.8-21.2L6 32l21.2-4.8z" fill="#F5B301"/></svg>
+      Dark Star Dispatch
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#handle">What we handle</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary btn-small" href="#apply" data-apply>Apply as a carrier</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero on-dark" id="top">
+    <div class="wrap">
+      <div>
+        <h1>You drive. We handle the broker calls.</h1>
+        <p class="hero-lead">Dark Star Dispatch finds loads for small US carriers with 1 to 3 trucks, negotiates rates with brokers and follows up on the paperwork. You approve every load.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#apply" data-apply>Apply as a carrier</a>
+          <a class="btn btn-ghost" href="https://wa.me/923374232816" data-wa target="_blank" rel="noopener">Message us on WhatsApp</a>
+        </div>
+        <p class="hero-note">We reply to every sign-up within 1 to 2 business days.</p>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 480 560" role="img" aria-label="A highway at night leading toward a bright star">
+          <rect x="0" y="300" width="480" height="260" fill="#0B1A2E"/>
+          <g fill="#A9B8CA" opacity=".7">
+            <circle cx="60" cy="70" r="1.6"/><circle cx="130" cy="130" r="1.2"/><circle cx="90" cy="220" r="1.4"/>
+            <circle cx="400" cy="60" r="1.6"/><circle cx="350" cy="140" r="1.2"/><circle cx="430" cy="230" r="1.4"/>
+            <circle cx="300" cy="40" r="1.1"/><circle cx="170" cy="40" r="1.1"/><circle cx="40" cy="160" r="1"/><circle cx="455" cy="150" r="1"/>
+          </g>
+          <circle cx="240" cy="150" r="96" fill="#F5B301" opacity=".08"/>
+          <path class="hero-star" d="M240 74l11 64 63 12-63 12-11 64-11-64-63-12 63-12z" fill="#F5B301"/>
+          <polygon points="236,300 244,300 440,560 40,560" fill="#183253"/>
+          <polyline points="237.5,300 62,560" fill="none" stroke="#A9B8CA" stroke-width="2" opacity=".65"/>
+          <polyline points="242.5,300 418,560" fill="none" stroke="#A9B8CA" stroke-width="2" opacity=".65"/>
+          <g fill="#F5B301">
+            <polygon points="239.12,312 240.88,312 241.12,318 238.88,318"/>
+            <polygon points="238.4,330 241.6,330 242,340 238,340"/>
+            <polygon points="237.36,356 242.64,356 243.2,370 236.8,370"/>
+            <polygon points="235.92,392 244.08,392 244.88,412 235.12,412"/>
+            <polygon points="234,440 246,440 247.2,470 232.8,470"/>
+            <polygon points="231.2,510 248.8,510 250.8,560 229.2,560"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="facts on-dark" aria-label="At a glance">
+    <div class="wrap">
+      <ul>
+        <li><strong>Vans, reefers, flatbeds</strong><span>Also box trucks, hotshots and power only</span></li>
+        <li><strong>No upfront fees</strong><span>We earn a percentage of the loads we book</span></li>
+        <li><strong>You approve every load</strong><span>Nothing is booked without your yes</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="wrap split">
+      <div>
+        <h2>From sign-up to booked load</h2>
+        <p class="lead">Five steps, in this order. We check who we are working with before we book anything.</p>
+      </div>
+      <ol class="route">
+        <li>
+          <span class="stop" aria-hidden="true">1</span>
+          <h3>You apply</h3>
+          <p>Fill in the carrier form or message us on WhatsApp. It takes a few minutes.</p>
+        </li>
+        <li>
+          <span class="stop" aria-hidden="true">2</span>
+          <h3>We check your authority</h3>
+          <p>We look up your USDOT and MC numbers in the public FMCSA records, and ask for your insurance certificate and W-9.</p>
+        </li>
+        <li>
+          <span class="stop" aria-hidden="true">3</span>
+          <h3>You review the agreement</h3>
+          <p>We send a short dispatch agreement with the fee written in. Nothing starts until you sign it.</p>
+        </li>
+        <li>
+          <span class="stop" aria-hidden="true">4</span>
+          <h3>We find and negotiate loads</h3>
+          <p>We search for loads that fit your truck, your lanes and your minimum rate, and negotiate with brokers. You approve each load before we book it.</p>
+        </li>
+        <li>
+          <span class="stop" aria-hidden="true">5</span>
+          <h3>We follow up on the paperwork</h3>
+          <p>You get the rate confirmation to review. We follow up with the broker and keep a record of every load we book for you.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section-white" id="handle">
+    <div class="wrap">
+      <h2>Who does what</h2>
+      <p class="lead">You stay the carrier. We take the office work off your plate.</p>
+      <div class="duo">
+        <div class="panel">
+          <h3>We handle</h3>
+          <p>The calls, emails and follow-ups.</p>
+          <ul class="marks">
+            <li>Searching for loads that fit your truck and lanes</li>
+            <li>Calling and emailing brokers</li>
+            <li>Negotiating rates against your minimum</li>
+            <li>Sending rate confirmations for your review</li>
+            <li>Keeping a record of every load we book</li>
+          </ul>
+        </div>
+        <div class="panel panel-alt">
+          <h3>Stays with you</h3>
+          <p>Your business, your decisions.</p>
+          <ul class="marks marks-hollow">
+            <li>Your operating authority, in your own name</li>
+            <li>The final yes or no on every load and rate</li>
+            <li>Driving, pickups and deliveries</li>
+            <li>Insurance, inspections and maintenance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-dark on-dark" id="pricing">
+    <div class="wrap needs-grid">
+      <div>
+        <h2>What we need from you</h2>
+        <p class="lead">Have these ready and sign-up goes quickly.</p>
+        <ul class="marks">
+          <li>An active USDOT number</li>
+          <li>Active MC operating authority</li>
+          <li>Liability insurance on file</li>
+          <li>A completed W-9</li>
+          <li>Your truck type and home base</li>
+          <li>Your minimum rate per mile</li>
+        </ul>
+      </div>
+      <div class="price-box">
+        <h3>Simple pricing</h3>
+        <p class="price" data-fee>A percentage of each load we book</p>
+        <ul class="marks">
+          <li>No upfront fees</li>
+          <li>No fee if we do not book a load</li>
+          <li>The exact fee is in writing before you sign</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="wrap">
+      <h2>Questions carriers ask</h2>
+      <div class="faq">
+        <details>
+          <summary>What does a truck dispatcher do?</summary>
+          <p>A dispatcher finds loads for your truck, negotiates the rate with the broker and handles the follow-up so you can focus on driving. You keep your own authority and you make the final call on every load.</p>
+        </details>
+        <details>
+          <summary>How much does it cost?</summary>
+          <p>We charge a percentage of each load we book for you. There are no upfront fees. The exact percentage goes in the dispatch agreement before you sign anything.</p>
+        </details>
+        <details>
+          <summary>Do I need my own MC authority and insurance?</summary>
+          <p>Yes. You need active USDOT and MC numbers and liability insurance on file. We check them in the public FMCSA records before we book a load for you.</p>
+        </details>
+        <details>
+          <summary>Do you guarantee loads or income?</summary>
+          <p>No. Freight availability and rates change every day, and we cannot promise a specific number of loads or a specific income.</p>
+        </details>
+        <details>
+          <summary>Are you a freight broker?</summary>
+          <p>No. We are a dispatch service that works for the carrier. We do not take possession of freight and we do not hold your money.</p>
+        </details>
+        <details>
+          <summary>How long until I hear back?</summary>
+          <p>We reply to every sign-up within 1 to 2 business days, by email or WhatsApp.</p>
+        </details>
+        <details>
+          <summary>How do you use my information?</summary>
+          <p>Only to contact you about dispatch services. Please do not send your Social Security number, bank details or card numbers through this site.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section apply on-dark" id="apply">
+    <div class="wrap">
+      <h2>Ready to get your loads handled?</h2>
+      <p class="lead">Start with your USDOT number and truck type.</p>
+      <div class="apply-actions">
+        <a class="btn btn-primary" href="#apply" data-apply data-form-only hidden>Fill in the carrier form</a>
+        <a class="btn btn-ghost" href="https://wa.me/923374232816" data-wa target="_blank" rel="noopener">Message us on WhatsApp</a>
+        <a class="btn btn-ghost" href="mailto:darkstar24050@gmail.com" data-mail>Send an email</a>
+      </div>
+      <div class="apply-next">
+        <p><strong>Within 1 to 2 business days:</strong> we reply and ask for anything that is missing.</p>
+        <p><strong>Then:</strong> we check your authority and insurance in the public records.</p>
+        <p><strong>Then:</strong> you review the dispatch agreement. We book nothing until you sign.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer on-dark">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6l4.8 21.2L58 32l-21.2 4.8L32 58l-4.8-21.2L6 32l21.2-4.8z" fill="#F5B301"/></svg>
+      Dark Star Dispatch
+    </a>
+    <div class="foot-contact">
+      <a href="mailto:darkstar24050@gmail.com" data-mail data-mail-text>darkstar24050@gmail.com</a>
+      <a href="https://wa.me/923374232816" data-wa target="_blank" rel="noopener">WhatsApp</a>
+      <span data-address hidden></span>
+    </div>
+    <p class="legal">Dark Star Dispatch is a dispatch service. We are not a freight broker or a motor carrier. Loads and income are not guaranteed. Carriers remain responsible for their own operating authority, insurance and compliance.</p>
+    <p>&copy; <span data-year>2026</span> Dark Star Dispatch</p>
+  </div>
+</footer>
+
+<script>
+  // ---- Edit these values. Everything else on the page updates from here. ----
+  var SITE = {
+    formUrl: "",                    // Paste your Google Form link here (must start with https://). Leave empty until the form is ready.
+    email: "darkstar24050@gmail.com",
+    whatsappNumber: "923374232816", // Country code + number, digits only (no + or spaces)
+    address: "",                    // Optional. Shown in the footer if you fill it in.
+    feePercent: ""                  // Optional. For example "8" shows "8% of each load we book".
+  };
+  // ---------------------------------------------------------------------------
+
+  (function () {
+    var waText = "Hello Dark Star Dispatch, I'm a carrier and I'd like to know more about your dispatch service.\n\nCompany:\nUSDOT number:\nTruck type:\nHome state:";
+    var waUrl = "https://wa.me/" + SITE.whatsappNumber + "?text=" + encodeURIComponent(waText);
+    var mailUrl = "mailto:" + SITE.email + "?subject=" + encodeURIComponent("Carrier sign-up") +
+      "&body=" + encodeURIComponent("Company:\nUSDOT number:\nMC number:\nTruck type:\nHome state:\nPhone:");
+
+    document.querySelectorAll("[data-wa]").forEach(function (a) { a.href = waUrl; });
+    document.querySelectorAll("[data-mail]").forEach(function (a) {
+      a.href = mailUrl;
+      if (a.hasAttribute("data-mail-text")) a.textContent = SITE.email;
+    });
+
+    var hasForm = /^https:\/\//.test(SITE.formUrl);
+    document.querySelectorAll("[data-apply]").forEach(function (a) {
+      if (hasForm) { a.href = SITE.formUrl; a.target = "_blank"; a.rel = "noopener"; }
+    });
+    document.querySelectorAll("[data-form-only]").forEach(function (el) { el.hidden = !hasForm; });
+
+    if (SITE.feePercent) {
+      document.querySelectorAll("[data-fee]").forEach(function (el) { el.textContent = SITE.feePercent + "% of each load we book"; });
+    }
+    if (SITE.address) {
+      document.querySelectorAll("[data-address]").forEach(function (el) { el.textContent = SITE.address; el.hidden = false; });
+    }
+    document.querySelectorAll("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });
+  })();
+</script>
+</body>
+</html>
